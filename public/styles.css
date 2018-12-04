@@ -1,0 +1,35 @@
+article {
+    margin-left: 20px;
+}
+#editor {
+    border: 1px solid gray;
+    height: 350px;
+}
+
+a.uncreated {
+    color: lime;
+}
+
+#sidebar {
+    width: 150px;
+    float:left;
+    overflow-x: hidden;
+}
+#sidebar h1 {
+    font-size: 14pt;
+}
+#sidebar ul {
+    padding-left: 5px;;
+}
+#sidebar li {
+    list-style: none;
+}
+
+#main {
+    width: calc(100% - 151px);
+    float: left;
+}
+
+.title {
+    margin: 7px 5px;
+}
