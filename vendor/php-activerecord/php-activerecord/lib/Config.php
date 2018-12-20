@@ -162,7 +162,7 @@ class Config extends Singleton
 		if (array_key_exists($name, $this->connections))
 			return $this->connections[$name];
 
-		return null;
+		return $name;
 	}
 
 	/**

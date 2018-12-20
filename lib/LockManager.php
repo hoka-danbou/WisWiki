@@ -26,7 +26,7 @@ class LockManager
     public static function is_locked($item_id) {
         $entry = EditLocks::find_by_item_id($item_id);
         $ret = false;
-        if(empty($entry) > 0) {
+        if(!empty($entry)) {
             if(time() - $entry->datetime > 600) {
                 self::unlock($item_id);
             }else{
@@ -45,7 +45,7 @@ class LockManager
     public static function is_same_session($item_id, $session) {
         $entry = EditLocks::find_by_item_id($item_id);
         $ret = false;
-        if(empty($entry) > 0 && $entry->session == $session) {
+        if(!empty($entry)  && $entry->session == $session) {
             $ret = true;
         }
         return $ret;
@@ -72,7 +72,7 @@ class LockManager
      */
     public static function unlock($item_id) {
         $entry = EditLocks::find_by_item_id($item_id);
-        if(empty($entry) > 0) {
+        if(!empty($entry)) {
             $entry->delete();
         }
     }

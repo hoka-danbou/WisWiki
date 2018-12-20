@@ -182,14 +182,14 @@ abstract class Connection
 
 		$info = new \stdClass();
 		$info->protocol = $url['scheme'];
-		$info->host = $url['host'];
+		$info->host = isset($url['host']) ? "" : substr($url['path'],1);
 		$info->db = isset($url['path']) ? substr($url['path'], 1) : null;
 		$info->user = isset($url['user']) ? $url['user'] : null;
 		$info->pass = isset($url['pass']) ? $url['pass'] : null;
 
 		$allow_blank_db = ($info->protocol == 'sqlite');
 
-		if ($info->host == 'unix(')
+		if ($info->host == 'unix/')
 		{
 			$socket_database = $info->host . '/' . $info->db;
 
@@ -203,7 +203,7 @@ abstract class Connection
 				$info->host = $matches[1][0];
 				$info->db = $matches[2][0];
 			}
-		} elseif (substr($info->host, 0, 8) == 'windows(')
+		} elseif (substr($info->host, 0, 8) == 'windows/')
 		{
 			$info->host = urldecode(substr($info->host, 8) . '/' . substr($info->db, 0, -1));
 			$info->db = null;
@@ -335,6 +335,12 @@ abstract class Connection
 		} catch (PDOException $e) {
 			throw new DatabaseException($e);
 		}
+
+        if(DEBUG) {
+            echo $sth->queryString . "\n";
+            print_r( $values ) . "\n";
+        }
+
 		return $sth;
 	}
 
