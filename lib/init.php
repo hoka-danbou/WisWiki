@@ -13,12 +13,22 @@ require_once('LockManager.php');
 
 ActiveRecord\Config::initialize(function($cfg)
 {
-   $cfg->set_model_directory(__DIR__ . '/models');
-   $cfg->set_connections(
-     [
-       'development' => 'sqlite:/'.__DIR__.'/../data/wyswiki-devel.sqlite3',
-       'production'  => 'sqlite:/'.__DIR__.'/../data/wyswiki.sqlite3',
-     ]
-   );
-   $cfg->set_default_connection('production');
+    $cfg->set_model_directory(__DIR__ . '/models');
+
+    if(substr(PHP_OS,0,3) == 'WIN') {
+        $cfg->set_connections(
+          [
+            'development' => 'sqlite://windows/'.__DIR__.'/../data/wyswiki-devel.sqlite3',
+            'production'  => 'sqlite://windows/'.__DIR__.'/../data/wyswiki.sqlite3',
+          ]
+        );
+    }else{
+        $cfg->set_connections(
+          [
+            'development' => 'sqlite://unix'.__DIR__.'/../data/wyswiki-devel.sqlite3',
+            'production'  => 'sqlite://unix'.__DIR__.'/../data/wyswiki.sqlite3',
+          ]
+        );
+    }
+    $cfg->set_default_connection('production');
 });

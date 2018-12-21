@@ -182,27 +182,30 @@ abstract class Connection
 
 		$info = new \stdClass();
 		$info->protocol = $url['scheme'];
-		$info->host = isset($url['host']) ? "" : substr($url['path'],1);
+		$info->host = $url['host'];
 		$info->db = isset($url['path']) ? substr($url['path'], 1) : null;
 		$info->user = isset($url['user']) ? $url['user'] : null;
 		$info->pass = isset($url['pass']) ? $url['pass'] : null;
 
 		$allow_blank_db = ($info->protocol == 'sqlite');
 
-		if ($info->host == 'unix/')
+		if ($info->host == 'unix')
 		{
+
 			$socket_database = $info->host . '/' . $info->db;
 
-			if ($allow_blank_db)
+			if ($allow_blank_db) {
 				$unix_regex = '/^unix\((.+)\)\/?().*$/';
-			else
+			    $info->db = '/' . ltrim($info->db, '/');
+			}else{
 				$unix_regex = '/^unix\((.+)\)\/(.+)$/';
 
-			if (preg_match_all($unix_regex, $socket_database, $matches) > 0)
-			{
-				$info->host = $matches[1][0];
-				$info->db = $matches[2][0];
-			}
+			    if (preg_match_all($unix_regex, $socket_database, $matches) > 0)
+			    {
+			    	$info->host = $matches[1][0];
+			    	$info->db = $matches[2][0];
+			    }
+            }
 		} elseif (substr($info->host, 0, 8) == 'windows/')
 		{
 			$info->host = urldecode(substr($info->host, 8) . '/' . substr($info->db, 0, -1));
